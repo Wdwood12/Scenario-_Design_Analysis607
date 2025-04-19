@@ -1,0 +1,161 @@
+---
+title: 'Scenario Design Analysis: HRS'
+author: "Woodelyne Durosier"
+date: "2025-04-18"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Scenario Design Analysis: Health Recommender Systems(HRS)
+
+## Introduction
+
+The goal of the Health Recommender System (HRS) is to provide personalized recommendations that promote health and well-being.
+
+## Scenatio Design Analysis
+
+### User perspective
+
+**whos is the users?**
+-Health-conscious individuals
+-patient managing a chronic disease (e.g., diabetes).
+-Fitness fanatics.
+
+**what the user's goals?**
+- Get personalized dietary suggestions.
+ Discover recipes and healthful meals.
+-Track your progress toward health goals.
+-Get motivational and instructional help.
+
+**what is the ideal experience?**
+-A seamless, user-friendly interface.
+-Trustworthy and adaptable recommendations
+- Integration with wearables or medical data
+-Transparent explanation behind each recommendation.
+
+## organizational Perspective
+
+**who is the organization?**
+-A health organization that offers exercise and nutrition apps (fitbit, myfitnesspal, etc.)
+
+**What are the organizations's goals?**
+-Boost user retention and engagement
+-Make calued-added services available via subscriptions.
+-Enable predictive healthcare solutions based on data.
+
+**what is the ideal organizational experience*?**
+-The ability to scale customisation
+-A solid reputation for morally sound and practical health advice
+-Collaborations with insurers and healthcare providers
+
+# Reverse Engineering the system
+
+According to literature and user interface components, the recommender system probably consists of:
+-Filtering content based on user objectives, dietary constraints, and culinary preferences
+-Using knowledge-based reasoning to follow dietary recommendations or medical advice
+-Context-aware computing that modifies recommendations based on activity level or time of day
+-Feedback systems that pick up on user choices and actions
+
+These characteristics, in particular how systems manage customization under constraints like data sparsity and privacy, are in line with those described in De Croon et al. (2021).
+
+## Visualization and literature of Prior Work
+Here we review 10 key academic stuies to demonstrate how evolve the healthcare recommender system has been.Below is a summarization of the methodology, scope and contributions of each.
+
+```{r}
+# Load libraries
+library(tidyverse)
+```
+
+### Table 1: display of Excisting HRS Review Papers
+
+```{r}
+# the dataset
+hrs_reviews <- tribble(
+  ~Review, ~Papers_n, ~Method, ~Scope, ~Contribution,
+  "Sezgin & Özkan (2013)", 8, "Systematic review", "Overview of literature in 2013", "Challenges (e.g., cyber-attacks) and opportunities (integration, consistency)",
+  "Calero Valdez et al (2016)", 17, "Survey", "HCI and interface design", "Framework to include domain understanding and methods",
+  "Kamran & Javed (2015)", 7, "Systematic review", "Focus on health care systems", "Proposing a hybrid HRS",
+  "Afolabi et al (2015)", 22, "Systematic review", "Empirical HRS results", "Novel proposal for smart home integration",
+  "Ferretto et al (2017)", 8, "Systematic review", "Mobile apps", "Identifying limited mobile HRS",
+  "Hors-Fraile et al (2018)", 19, "Systematic review", "Patient interventions", "Multidisciplinary taxonomy, EHR integration",
+  "Schäfer et al (2017)", 24, "Survey", "Personalized/complex interventions", "Challenges for patients, recommenders, and evaluations",
+  "Sadasivam et al (2016)", 15, "Systematic review", "CTHC limitations", "Challenges and future research agenda",
+  "Wiesner & Pfeifer (2014)", NA, "Survey", "Intro to HRSs for personal health records", "Evaluation approaches and open issues",
+  "Cappella et al (2015)", NA, "Survey", "Public health message archives", "Theory and application reflection"
+)
+```
+
+# Plot 1: Number of papers by review
+
+This bar graph depicts the amount of literature reviewed in each health recommender system review.
+
+```{r}
+
+hrs_reviews %>%
+  filter(!is.na(Papers_n)) %>%
+  ggplot(aes(x = reorder(Review, Papers_n), y = Papers_n, fill = Method)) +
+  geom_col() +
+  coord_flip() +
+  labs(title = "Number of Papers Reviewed by Study",
+       x = "Review",
+       y = "Number of Papers",
+       fill = "Method") +
+  theme_minimal(base_size = 12)
+```
+
+# Plot 2: Scope vs. Contribution (simplified scatter with labels)
+
+This annotated plot summarizes each study's focus area by providing brief descriptions of its scope, color-coded by method.
+
+```{r}
+
+hrs_reviews %>%
+  filter(!is.na(Papers_n)) %>%
+  ggplot(aes(x = Papers_n, y = reorder(Review, Papers_n), color = Method)) +
+  geom_point(size = 4) +
+  geom_text(aes(label = str_trunc(Scope, 30, "right")), hjust = -0.05, size = 3.5) +
+  labs(title = "Study Scope by Number of Papers",
+       x = "Number of Papers",
+       y = "Review") +
+  theme_minimal(base_size = 12) +
+  xlim(0, max(hrs_reviews$Papers_n, na.rm = TRUE) + 5)
+
+```
+
+## Recommendations for Improvement
+
+**Transpareny and Explainability **
+-Clearly state the rationale behind a suggestion (for example, "You logged a workout, so here’s a protein-rich recipe").
+-Connect user objectives with recommendations by using visual aids (icons, graphs, or highlighted nutrients).
+-Provide a "Why this?" option to provide background information for each suggestion.
+
+**Personalization and Context Awareness**
+-Adjust suggestions based on current circumstances (e.g., post-exercise meals)
+-Adjust nudges according to adherence levels and daily routines.
+-To maximize the timing of health cues, use temporal patterns (e.g., meal suggestions near normal eating periods).
+
+**Ethical Design and Privacy**
+-Give consumers the option to choose the data that informs suggestions.
+-Assure adherence to HIPAA and GDPR
+-Use techniques for data reduction and anonymization.
+
+**Clinician Integration**
+-Distribute dashboards to medical experts.
+-Make it possible to mark foods or activities that pose a health risk.
+-When possible, permit connection with electronic health records (EHRs).
+
+## Conclusion
+
+One of the most important steps in empowering people in their health journey is the implementation of health recommender systems. This scenario design study shows that in order to be effective, systems must meet corporate objectives as well as user demands while preserving morally sound and open recommendation systems. More clinical value, usability, and customization can be attained by future HRS by expanding on current frameworks, such as those offered by De Croon et al. (2021).
+
+# References
+- De Croon, R., Van Houdt, L., Htun, N. N., Štiglic, G., Vanden Abeele, V., & Verbert, K. (2021). Health Recommender Systems: Systematic Review. *Journal of Medical Internet Research*.
+- Temkin, B. D. (2004). Scenario Design: A Disciplined Approach to Customer Experience. *Forrester Research*.
+- Burke, R. (2002). Hybrid Recommender Systems: Survey and Experiments. *User Modeling and User-Adapted Interaction*.
+- Additional references from the table as needed
+
+***
+ 
+
